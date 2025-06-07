@@ -21,8 +21,8 @@ export default function App() {
       <ul>
         {eventData.map((event, index) => (
           <li key={index}>
-            <strong>Examen:</strong> {event.examen} <br />
-            <strong>Datum:</strong> {event.datum}
+            <strong>Examen:</strong> {event.name} <br />
+            <strong>Datum:</strong> {event.date}
           </li>
         ))}
       </ul>
