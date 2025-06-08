@@ -1,6 +1,6 @@
 import { db, collection, getDocs } from "../firebase";
 
-function getTodayKey() {
+export function getTodayKey() {
   const today = new Date();
   const mm = String(today.getMonth() + 1).padStart(2, "0");
   const dd = String(today.getDate()).padStart(2, "0");

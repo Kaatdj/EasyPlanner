@@ -1,7 +1,20 @@
 import { useState, useEffect } from "react";
 import { fetchEvents } from "./services/events";
 import { fetchFirstUpcommingBirthday } from "./services/birthdays";
+import { getTodayKey } from "./services/birthdays";
 import './App.css';
+
+function formatBirthdayDate(numericDate) {
+  const monthNames = [
+    "januari", "februari", "maart", "april", "mei", "juni",
+    "juli", "augustus", "september", "oktober", "november", "december"
+  ];
+
+  const [month, day] = numericDate.toString().split('.').map(Number);
+  if (!month || !day) return numericDate;
+
+  return `${day} ${monthNames[month - 1]}`;
+}
 
 export default function App() {
   const [eventData, setEventData] = useState([]);
@@ -51,14 +64,22 @@ export default function App() {
       </div>
       <br />
       <div className="event-wrapper">
-        <h1>Aankomende verjaardag</h1>
+        {birthdayData && birthdayData.date &&
+          (parseInt(getTodayKey().split(".")[0], 10) === parseInt(birthdayData.date.toString().split(".")[0], 10) &&
+           parseInt(getTodayKey().split(".")[1], 10) === parseInt(birthdayData.date.toString().split(".")[1], 10)
+          ) ? (
+            <h1>{birthdayData.name} is jarig</h1>
+          ) : (
+            <h1>Aankomende verjaardag</h1>
+          )
+        }
         {birthdayError && <p>{birthdayError}</p>}
-        {!birthdayData ? (
-          <p>Geen verjaardagen meer dit jaar</p>
-        ) : (
+        {birthdayData && birthdayData.date ? (
           <div className="birthday">
-            <strong>{birthdayData.name}</strong> - {birthdayData.date}
+            <strong>{birthdayData.name}</strong> - {formatBirthdayDate(birthdayData.date)}
           </div>
+        ) : (
+          <p>Geen verjaardagen meer dit jaar</p>
         )}
       </div>
     </>
