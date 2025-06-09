@@ -86,3 +86,39 @@ p {
   text-align: center;
   font-weight: bold;
 }
+
+/* water */
+.progress-bar {
+  width: 100%;
+  background-color: #e9f3ff;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 30px;
+}
+.progress-bar-fill {
+  height: 25px;
+  background-color: #527391;
+  width: 0; /* Dynamisch aanpassen via JavaScript */
+  transition: width 0.3s ease;
+  color: rgb(140, 192, 255);
+  font-weight: bold;
+  border-radius: 8px;
+}
+.progress-bar-fill span {
+  display: block;
+  text-align: center;
+  margin-bottom: 5px;
+}
+.progress-bar-fill p {
+  margin: 0;
+  color: #e9f3ff; 
+}
+button {
+  background-color: #529187;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+}

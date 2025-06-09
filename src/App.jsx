@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { fetchEvents } from "./services/events";
 import { fetchFirstUpcommingBirthday } from "./services/birthdays";
 import { getTodayKey } from "./services/birthdays";
+import { putWaterIntakeByDate } from "./services/waterIntake";
 import './App.css';
+import { fetchWaterIntakeToday } from "./services/waterIntake";
 
 function formatBirthdayDate(numericDate) {
   const monthNames = [
@@ -16,11 +18,27 @@ function formatBirthdayDate(numericDate) {
   return `${day} ${monthNames[month - 1]}`;
 }
 
+function waterPercentage(liter) {
+  const goal = 1.5;
+  const percentage = (liter / goal) * 100;
+  return Math.min(percentage, 100); // Max 100%
+}
+
 export default function App() {
   const [eventData, setEventData] = useState([]);
   const [birthdayData, setBirthdayData] = useState([]);
+  const [waterIntakeData, setWaterIntakeData] = useState(0);
   const [eventError, setEventError] = useState(null);
   const [birthdayError, setBirthdayError] = useState(null);
+
+  async function drinkWater(amount) {
+  const today = new Date();
+  const dateStr = today.toISOString().slice(0, 10); // "YYYY-MM-DD"
+  const waterBefore = Math.max(0, waterIntakeData);
+  const totalWater = amount + waterBefore;
+  await putWaterIntakeByDate(dateStr, totalWater)
+  return totalWater;
+}
 
   // Haal events op na eerste load
   useEffect(() => {
@@ -39,6 +57,17 @@ export default function App() {
       .catch((err) => {
         console.error(err);
         setBirthdayError("Er is iets misgegaan bij het ophalen van de verjaardagen.");
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchWaterIntakeToday()
+      .then((data) => {
+          console.log("Waterinname vandaag:", data);
+          setWaterIntakeData(data);
+      })
+      .catch((err) => {
+        console.error("Fout bij ophalen waterinname:", err);
       });
   }, []);
 
@@ -81,6 +110,25 @@ export default function App() {
         ) : (
           <p>Geen verjaardagen meer dit jaar</p>
         )}
+      </div>
+      <br />
+      <div className="event-wrapper">
+        <div className="grid">
+          <button onClick={async () => {const nieuwTotaal = await drinkWater(0.2);setWaterIntakeData(nieuwTotaal);}}>200ml</button>
+          <button onClick={async () => {const nieuwTotaal = await drinkWater(0.25);setWaterIntakeData(nieuwTotaal);}}>250ml</button>
+          <button onClick={async () => {const nieuwTotaal = await drinkWater(0.5);setWaterIntakeData(nieuwTotaal);}}>500ml</button>
+          <button onClick={async () => {const nieuwTotaal = await drinkWater(1);setWaterIntakeData(nieuwTotaal);}}>1l</button>
+        </div>
+        <br />
+        {waterIntakeData >= 1.5 && (
+            <p>Je hebt je watergoal gehaald vandaag! Geen wallen voor jou!</p>
+          )}
+        <br />
+        <div className="progress-bar">
+          <div className="progress-bar-fill" style={{ width: `${waterPercentage(waterIntakeData)}%` }}>
+            <p>{waterIntakeData} liter</p>
+          </div>
+        </div>
       </div>
     </>
   );
