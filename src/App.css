@@ -116,9 +116,16 @@ p {
 button {
   background-color: #529187;
   color: white;
+  min-width: 75px;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
+}
+.button-grid {
+  display: flex;
+  justify-content: left;
+  margin-top: 1rem;
+  gap: 1rem;
 }

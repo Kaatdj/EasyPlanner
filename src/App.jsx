@@ -113,15 +113,18 @@ export default function App() {
       </div>
       <br />
       <div className="event-wrapper">
-        <div className="grid">
+        <div className="button-grid">
+          <button onClick={async () => {const nieuwTotaal = await drinkWater(0.05);setWaterIntakeData(nieuwTotaal);}}>50ml</button>
           <button onClick={async () => {const nieuwTotaal = await drinkWater(0.2);setWaterIntakeData(nieuwTotaal);}}>200ml</button>
           <button onClick={async () => {const nieuwTotaal = await drinkWater(0.25);setWaterIntakeData(nieuwTotaal);}}>250ml</button>
           <button onClick={async () => {const nieuwTotaal = await drinkWater(0.5);setWaterIntakeData(nieuwTotaal);}}>500ml</button>
           <button onClick={async () => {const nieuwTotaal = await drinkWater(1);setWaterIntakeData(nieuwTotaal);}}>1l</button>
         </div>
         <br />
-        {waterIntakeData >= 1.5 && (
+        {waterIntakeData >= 1.5 ? (
             <p>Je hebt je watergoal gehaald vandaag! Geen wallen voor jou!</p>
+          ) : (
+            <p>Je hebt nog {1.5 - waterIntakeData} liter te gaan vandaag.</p>
           )}
         <br />
         <div className="progress-bar">
